@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>《人工智能通识》模块一 · 课堂练习平台</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">AI</span>
+      <div>
+        <div class="brand-title">模块一 从初识到大模型工具应用</div>
+        <div class="brand-sub">课堂练习平台 · 学生端 / 教师端</div>
+      </div>
+    </div>
+    <button id="backHome" class="btn-ghost hidden">← 返回首页</button>
+  </header>
+
+  <main id="app">
+    <!-- 首页：角色选择 -->
+    <section id="home" class="view">
+      <div class="hero">
+        <h1>课堂练习平台</h1>
+        <p>基于《人工智能通识》模块一目录，按部分拆分练习 · 共 <span id="secCount">—</span> 套练习 / <span id="qCount">—</span> 题</p>
+      </div>
+      <div class="role-cards">
+        <button class="role-card" data-role="student">
+          <div class="role-emoji">🎓</div>
+          <h2>学生端</h2>
+          <p>选择练习 · 即时判分 · 查看解析</p>
+          <span class="role-go">开始练习 →</span>
+        </button>
+        <button class="role-card" data-role="teacher">
+          <div class="role-emoji">📊</div>
+          <h2>教师端</h2>
+          <p>查看成绩 · 练习分析 · 导出结果</p>
+          <span class="role-go">进入管理 →</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 学生端 -->
+    <section id="student" class="view hidden">
+      <!-- 步骤1：填写信息 -->
+      <div id="studentForm" class="card">
+        <h2>填写信息</h2>
+        <label>姓名 <input id="stuName" type="text" placeholder="请输入姓名" maxlength="20" /></label>
+        <label>班级 <input id="stuClass" type="text" placeholder="如：24电商1班" maxlength="20" /></label>
+        <button id="enterPractice" class="btn-primary">进入练习</button>
+      </div>
+
+      <!-- 步骤2：练习列表 -->
+      <div id="practiceList" class="hidden">
+        <div class="pl-head">
+          <div class="stu-info" id="plStuInfo"></div>
+          <button id="plBackHome" class="btn-ghost">返回首页</button>
+        </div>
+        <p class="muted pl-tip">选择一套练习开始作答，可针对薄弱部分反复练习。已完成练习会显示你的最佳成绩。</p>
+        <div id="plBody"></div>
+      </div>
+
+      <!-- 步骤3：答题 -->
+      <div id="quizWrap" class="hidden">
+        <div class="quiz-head">
+          <div>
+            <span id="stuInfo" class="stu-info"></span>
+            <div id="quizSecName" class="quiz-sec"></div>
+          </div>
+          <div class="progress">
+            <div class="progress-bar"><div id="progFill" class="progress-fill"></div></div>
+            <span id="progText" class="prog-text">0 / 0</span>
+            <button id="quizBack" class="btn-ghost btn-sm">练习列表</button>
+          </div>
+        </div>
+        <div id="quizBody"></div>
+        <div class="quiz-foot">
+          <button id="submitQuiz" class="btn-primary" disabled>提交答卷</button>
+          <span id="submitHint" class="hint"></span>
+        </div>
+      </div>
+
+      <!-- 步骤4：结果 -->
+      <div id="resultWrap" class="hidden">
+        <div class="result-card">
+          <div class="score-ring">
+            <div class="score-num" id="scoreNum">0</div>
+            <div class="score-den" id="scoreDen">/ 0</div>
+          </div>
+          <h2 id="resultTitle">练习完成！</h2>
+          <p id="resultSec" class="result-sec"></p>
+          <p id="resultPercent" class="result-percent"></p>
+          <div id="partBreak" class="part-break"></div>
+          <div class="result-actions">
+            <button id="reviewWrong" class="btn-primary">查看解析 / 错题</button>
+            <button id="backToPractice" class="btn-ghost">返回练习列表</button>
+            <button id="stuHome" class="btn-ghost">返回首页</button>
+          </div>
+        </div>
+        <div id="reviewWrap" class="review-wrap"></div>
+      </div>
+    </section>
+
+    <!-- 教师端 -->
+    <section id="teacher" class="view hidden">
+      <div id="teacherLogin" class="card center-card">
+        <h2>教师登录</h2>
+        <p class="muted">输入访问码，或用手机扫码进入</p>
+        <div id="teaQrWrap" class="qr-wrap">
+          <img id="teaQr" alt="教师端访问码二维码" />
+          <p class="qr-cap">手机扫码进入教师端<br><span class="muted">（与本机同一局域网）</span></p>
+          <p id="teaLanTip" class="muted qr-lan"></p>
+        </div>
+        <label>访问码 <input id="teaToken" type="password" placeholder="访问码" /></label>
+        <button id="teaLogin" class="btn-primary">进入</button>
+        <p id="teaErr" class="err"></p>
+      </div>
+
+      <div id="teacherDash" class="hidden">
+        <div class="dash-head">
+          <h2>成绩管理</h2>
+          <div class="dash-tools">
+            <input id="searchName" type="text" placeholder="搜索姓名/班级" />
+            <select id="filterClass"><option value="">全部班级</option></select>
+            <select id="filterSection"><option value="">全部练习</option></select>
+            <select id="sortBy">
+              <option value="time">按提交时间</option>
+              <option value="scoreDesc">按正确率高→低</option>
+              <option value="scoreAsc">按正确率低→高</option>
+              <option value="name">按姓名</option>
+            </select>
+            <button id="refreshBtn" class="btn-ghost">刷新</button>
+            <button id="exportCsv" class="btn-primary">导出 CSV</button>
+            <button id="exportXls" class="btn-primary">导出 Excel</button>
+          </div>
+        </div>
+        <div id="stats" class="stats"></div>
+        <div id="sectionOverview" class="sec-overview"></div>
+        <div class="table-wrap">
+          <table id="resultTable">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p id="emptyTip" class="muted hidden">暂无学生提交记录。</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="app.js"></script>
+</body>
+</html>

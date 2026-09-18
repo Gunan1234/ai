@@ -1,0 +1,17 @@
+# Render 部署配置（基础设施即代码）
+# 用法：在 Render 后台 New → Blueprint → 选中本仓库，Render 会按此文件自动建服务。
+# 也可在 New → Web Service 手动建（参数见下方 services 配置）。
+services:
+  - type: web
+    name: ai-tongshi-quiz
+    runtime: node
+    plan: free
+    region: singapore       # 离大陆最近的 Render 区域；可在后台改成 oregon/frankfurt
+    branch: main            # 你的默认分支名（可能是 master）
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/quiz
+    envVars:
+      - key: TEACHER_TOKEN
+        value: teacher7400  # 教师端访问码，可改成你自己的
+      # 注意：PORT 由 Render 自动注入，server.js 已用 process.env.PORT 读取，无需配置

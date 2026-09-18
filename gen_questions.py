@@ -1,0 +1,174 @@
+# -*- coding: utf-8 -*-
+"""生成《人工智能通识》模块一 课堂练习题库。
+按用户要求：每个【部分】10 道题，共 3 个部分、30 题。
+题型：单选 + 判断，无多选。题目低难度、对齐教材目录内容。
+数据模型：parts -> sections(每部分1个section，含10题) -> questions。
+"""
+import json, os
+
+# 每部分一个 section，section 内含 10 题（混合单选/判断）
+PARTS = [
+    {
+        "id": "p1",
+        "name": "第一部分 初识人工智能",
+        "sections": [
+            {
+                "id": "s1",
+                "title": "概念·分类·历程",
+                "questions": [
+                    {"type": "single", "stem": "人工智能是指利用计算机程序与算法，模拟、延伸甚至扩展什么的技术？",
+                     "options": ["人类智能", "动物本能", "机器自身的硬件", "自然天气规律"], "answer": 0,
+                     "explain": "人工智能的核心目标是模拟、延伸和扩展人类智能。"},
+                    {"type": "judge", "stem": "人工智能就是让机器像人一样思考、学习和解决问题。",
+                     "options": ["正确", "错误"], "answer": 0,
+                     "explain": "这正是人工智能的基本含义。"},
+                    {"type": "single", "stem": "我们日常使用的刷脸支付、智能音箱，大多属于下列哪一类人工智能？",
+                     "options": ["弱人工智能（专用型）", "强人工智能", "具有自我意识的超级智能", "通用人工智能"], "answer": 0,
+                     "explain": "这些系统只擅长特定任务，属于弱人工智能。"},
+                    {"type": "single", "stem": "下列关于“强人工智能”的说法，正确的是？",
+                     "options": ["能像人一样理解和学习各类智能任务", "只能下围棋", "只能识别语音", "只能做图片分类"], "answer": 0,
+                     "explain": "强人工智能指具备通用智能、可胜任人类各种智力活动的机器。"},
+                    {"type": "judge", "stem": "目前广泛应用的人工智能（如推荐系统、语音助手）都属于弱人工智能。",
+                     "options": ["正确", "错误"], "answer": 0,
+                     "explain": "当前落地应用基本都是弱人工智能。"},
+                    {"type": "single", "stem": "人工智能发展的第一次浪潮主要基于哪种方法？",
+                     "options": ["符号主义与专家系统", "深度学习", "大语言模型", "量子计算"], "answer": 0,
+                     "explain": "第一次浪潮以符号主义和专家系统为代表。"},
+                    {"type": "single", "stem": "以深度学习和大数据为标志的是第几次人工智能浪潮？",
+                     "options": ["第一次", "第二次", "第三次", "尚未发生"], "answer": 2,
+                     "explain": "第三次浪潮由深度学习与海量数据驱动。"},
+                    {"type": "single", "stem": "AlphaGo 战胜围棋世界冠军，主要得益于哪项技术？",
+                     "options": ["深度学习", "纯规则引擎", "机械计算", "随机搜索"], "answer": 0,
+                     "explain": "AlphaGo 依靠深度神经网络与强化学习取胜。"},
+                    {"type": "judge", "stem": "图灵测试用于判断机器是否能表现出与人类难以区分的智能行为。",
+                     "options": ["正确", "错误"], "answer": 0,
+                     "explain": "图灵测试正是检验机器智能表现的方法。"},
+                    {"type": "single", "stem": "提出“图灵测试”的人工智能奠基人是谁？",
+                     "options": ["艾伦·图灵", "爱因斯坦", "牛顿", "爱迪生"], "answer": 0,
+                     "explain": "艾伦·图灵提出了著名的图灵测试。"},
+                ],
+            }
+        ],
+    },
+    {
+        "id": "p2",
+        "name": "第二部分 大模型工具",
+        "sections": [
+            {
+                "id": "s2",
+                "title": "原理·分类·工具",
+                "questions": [
+                    {"type": "single", "stem": "“大模型”通常是指什么？",
+                     "options": ["参数规模巨大、经海量数据预训练的人工智能模型", "一个小型规则程序", "普通搜索引擎", "一张电子表格"], "answer": 0,
+                     "explain": "大模型指参数量大、经大规模数据预训练的模型。"},
+                    {"type": "judge", "stem": "大模型本质上就是一个传统的搜索引擎。",
+                     "options": ["正确", "错误"], "answer": 1,
+                     "explain": "大模型能生成内容，与传统搜索有本质区别。"},
+                    {"type": "single", "stem": "以下属于“语言大模型”的是？",
+                     "options": ["能理解和生成文本的模型", "只处理图片的模型", "只做语音识别的模型", "只做视频剪辑的模型"], "answer": 0,
+                     "explain": "语言大模型以处理文本为主。"},
+                    {"type": "single", "stem": "下列对大模型“工作过程四步”的描述，不包含哪一步？",
+                     "options": ["预训练", "微调/对齐", "人工反馈强化学习(RLHF)", "手动逐条编写每条答案"], "answer": 3,
+                     "explain": "大模型通过预训练、对齐与RLHF学习，而非人工逐条写答案。"},
+                    {"type": "single", "stem": "大模型工作过程的第一步通常是？",
+                     "options": ["预训练", "部署上线", "用户提问", "导出Excel"], "answer": 0,
+                     "explain": "先在海量数据上预训练，再微调与对齐。"},
+                    {"type": "judge", "stem": "RLHF 指“基于人类反馈的强化学习”，可让模型回答更符合人类偏好。",
+                     "options": ["正确", "错误"], "answer": 0,
+                     "explain": "RLHF 正是用人类反馈来对齐模型行为。"},
+                    {"type": "single", "stem": "DeepSeek 是由哪里的团队开发的大模型？",
+                     "options": ["中国", "仅美国", "仅日本", "仅德国"], "answer": 0,
+                     "explain": "DeepSeek 是中国团队开发的开源大模型。"},
+                    {"type": "single", "stem": "以下哪一款是字节跳动推出的大模型应用？",
+                     "options": ["豆包", "DeepSeek", "ChatGPT", "Kimi"], "answer": 0,
+                     "explain": "豆包由字节跳动推出。"},
+                    {"type": "single", "stem": "Kimi 智能助手以下列哪项能力著称？",
+                     "options": ["长文本处理", "只做图片生成", "只做视频剪辑", "只做音乐创作"], "answer": 0,
+                     "explain": "Kimi 以处理超长文本见长。"},
+                    {"type": "judge", "stem": "豆包、Kimi、DeepSeek 都属于常见的大模型工具。",
+                     "options": ["正确", "错误"], "answer": 0,
+                     "explain": "它们都是当前常见的大模型应用。"},
+                ],
+            }
+        ],
+    },
+    {
+        "id": "p3",
+        "name": "第三部分 大模型工具的典型应用",
+        "sections": [
+            {
+                "id": "s3",
+                "title": "文案·演示·智能体",
+                "questions": [
+                    {"type": "single", "stem": "想快速生成一篇产品推广文案，较适合使用哪款工具？",
+                     "options": ["豆包", "Excel", "画图", "计算器"], "answer": 0,
+                     "explain": "豆包等工具擅长文案生成。"},
+                    {"type": "judge", "stem": "用豆包这类工具可以辅助生成营销文案、标题等内容。",
+                     "options": ["正确", "错误"], "answer": 0,
+                     "explain": "文案生成是大模型典型应用之一。"},
+                    {"type": "single", "stem": "希望根据主题自动生成演示文稿(PPT)，较适合使用？",
+                     "options": ["Kimi", "记事本", "画图", "压缩软件"], "answer": 0,
+                     "explain": "Kimi 可辅助生成演示文稿。"},
+                    {"type": "single", "stem": "用 Kimi 生成 PPT 的一般流程是？",
+                     "options": ["提供主题/大纲→生成大纲→扩写内容→排版输出", "直接出成品无需输入", "只能生成图片", "只能聊天"], "answer": 0,
+                     "explain": "先给主题或大纲，再逐步生成与排版。"},
+                    {"type": "judge", "stem": "智能体(Agent)能够自主规划并调用工具来完成任务。",
+                     "options": ["正确", "错误"], "answer": 0,
+                     "explain": "智能体具备自主规划与工具调用能力。"},
+                    {"type": "single", "stem": "想零代码搭建一个能自动回复的客服智能体，可使用？",
+                     "options": ["扣子(Coze)", "记事本", "计算器", "画图"], "answer": 0,
+                     "explain": "扣子(Coze)支持低代码/零代码搭建智能体。"},
+                    {"type": "single", "stem": "关于“智能体”，下列说法正确的是？",
+                     "options": ["能感知目标、自主决策并执行任务", "只是静态网页", "只能播放音乐", "不能调用任何工具"], "answer": 0,
+                     "explain": "智能体可感知环境、决策并执行。"},
+                    {"type": "judge", "stem": "在扣子(Coze)平台上，可以通过拖拽等方式搭建智能体，无需写代码。",
+                     "options": ["正确", "错误"], "answer": 0,
+                     "explain": "扣子支持可视化、零代码搭建。"},
+                    {"type": "single", "stem": "以下哪一项不属于大模型“典型应用”的例子？",
+                     "options": ["手动拧螺丝", "文案生成", "演示文稿生成", "智能体搭建"], "answer": 0,
+                     "explain": "手动拧螺丝是体力操作，不属于大模型应用。"},
+                    {"type": "judge", "stem": "大模型工具的典型应用包括文案生成、演示文稿生成和智能体创建。",
+                     "options": ["正确", "错误"], "answer": 0,
+                     "explain": "这三类都是教材中的典型应用。"},
+                ],
+            }
+        ],
+    },
+]
+
+
+def build():
+    # 赋予每题稳定 id
+    for p in PARTS:
+        for sec in p["sections"]:
+            for i, q in enumerate(sec["questions"], 1):
+                q["id"] = f'{sec["id"]}-q{i}'
+    meta = {
+        "title": "《人工智能通识》模块一 · 课堂练习",
+        "module": "模块一 从初识到大模型工具应用",
+        "version": "4.0",
+        "mode": "per-part",
+    }
+    return {"meta": meta, "parts": PARTS}
+
+
+if __name__ == "__main__":
+    data = build()
+    out = os.path.join(os.path.dirname(__file__), "data", "questions.json")
+    with open(out, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+    # 校验
+    sp = 0
+    tot = 0
+    multi = 0
+    for p in data["parts"]:
+        for s in p["sections"]:
+            sp += 1
+            tot += len(s["questions"])
+            for q in s["questions"]:
+                if q["type"] == "multiple":
+                    multi += 1
+                # 答案合法性
+                assert 0 <= q["answer"] < len(q["options"]), f'答案越界: {q["id"]}'
+    print(f"生成成功：部分数 {len(data['parts'])} | 练习(section)数 {sp} | 总题数 {tot} | 多选 {multi}")

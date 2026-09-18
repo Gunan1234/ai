@@ -1,0 +1,12 @@
+# 依赖（部署时由 Render 执行 npm install 重新生成）
+node_modules/
+
+# 运行时产生的成绩数据（首次运行由 server.js 自动创建 data/results.json）
+data/results.json
+
+# 本地启动脚本等非部署文件
+start.bat
+
+# 运行时日志
+server_runtime.log
+*.log
