@@ -7,7 +7,7 @@ services:
     runtime: node
     plan: free
     region: singapore       # 离大陆最近的 Render 区域；可在后台改成 oregon/frankfurt
-    branch: main            # 你的默认分支名（可能是 master）
+    branch: master          # 本地默认分支名（已与本地 git 分支对齐）
     buildCommand: npm install
     startCommand: node server.js
     healthCheckPath: /api/quiz

@@ -217,18 +217,26 @@ const server = http.createServer(async (req, res) => {
       return sendJSON(res, 200, { results: all, total: all.length });
     }
 
-    // 教师端：导出（csv / xls）
+    // 教师端：导出（csv / xls），支持按班级 / 小节筛选
     if (pathname === '/api/export' && req.method === 'GET') {
       if (url.searchParams.get('token') !== TEACHER_TOKEN)
         return sendJSON(res, 403, { error: '访问码错误' });
       const fmt = (url.searchParams.get('format') || 'csv').toLowerCase();
-      const all = loadResults();
+      const cls = (url.searchParams.get('class') || '').trim();
+      const sec = (url.searchParams.get('section') || '').trim();
+      let all = loadResults();
+      if (cls) all = all.filter(r => r.className === cls);
+      if (sec) all = all.filter(r => r.sectionId === sec);
+      // 文件名按筛选附加标识（班级含中文时做 URL 编码，保证浏览器正确显示）
+      const tag = cls ? ('_' + cls) : (sec ? '_section' : '');
+      const fname = 'quiz_results' + tag + (fmt === 'xls' ? '.xls' : '.csv');
+      const dispName = /[一-龥]/.test(tag) ? encodeURIComponent(fname) : fname;
 
       if (fmt === 'xls') {
         const html = buildXls(all);
         res.writeHead(200, {
           'Content-Type': 'application/vnd.ms-excel; charset=utf-8',
-          'Content-Disposition': 'attachment; filename="quiz_results.xls"'
+          'Content-Disposition': 'attachment; filename="' + dispName + '"'
         });
         return res.end(html);
       }
@@ -236,7 +244,7 @@ const server = http.createServer(async (req, res) => {
       const csv = buildCsv(all);
       res.writeHead(200, {
         'Content-Type': 'text/csv; charset=utf-8',
-        'Content-Disposition': 'attachment; filename="quiz_results.csv"'
+        'Content-Disposition': 'attachment; filename="' + dispName + '"'
       });
       return res.end('﻿' + csv);
     }

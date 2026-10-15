@@ -457,9 +457,14 @@ $('#exportXls') && $('#exportXls').addEventListener('click', () => exportFile('x
 
 function exportFile(fmt) {
   if (!state.results.length) { toast('暂无数据可导出'); return; }
-  const url = API_ROOT + `/api/export?token=${encodeURIComponent(state.teacherToken)}&format=${fmt}`;
-  window.location.href = url;
-  toast('已开始导出 ' + (fmt === 'xls' ? 'Excel' : 'CSV'));
+  const p = new URLSearchParams();
+  p.set('token', state.teacherToken);
+  p.set('format', fmt);
+  if (state.filter.cls) p.set('class', state.filter.cls);
+  if (state.filter.section) p.set('section', state.filter.section);
+  const label = state.filter.cls ? '（' + state.filter.cls + '）' : (state.filter.section ? '（当前小节）' : '（全部）');
+  window.location.href = API_ROOT + '/api/export?' + p.toString();
+  toast('已开始导出 ' + (fmt === 'xls' ? 'Excel' : 'CSV') + label);
 }
 
 // ====== 工具 ======

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>《人工智能通识》模块一 · 课堂练习平台</title>
+  <style>:root {
+  --blue: #0E419C;
+  --blue-2: #2b6cd4;
+  --blue-light: #eaf1fc;
+  --green: #1f9d55;
+  --red: #d9534f;
+  --bg: #f4f7fb;
+  --card: #ffffff;
+  --text: #1f2733;
+  --muted: #7a869a;
+  --border: #e3e9f2;
+  --shadow: 0 6px 22px rgba(14, 65, 156, 0.08);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+.hidden { display: none !important; }
+.muted { color: var(--muted); }
+.err { color: var(--red); font-size: 14px; min-height: 18px; }
+
+/* 顶栏 */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(90deg, var(--blue), var(--blue-2));
+  color: #fff; padding: 12px 22px; box-shadow: var(--shadow);
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo {
+  width: 40px; height: 40px; border-radius: 10px; background: #fff; color: var(--blue);
+  display: grid; place-items: center; font-weight: 800; font-size: 18px;
+}
+.brand-title { font-weight: 700; font-size: 16px; }
+.brand-sub { font-size: 12px; opacity: .85; }
+
+/* 布局 */
+main { max-width: 980px; margin: 0 auto; padding: 26px 18px 60px; }
+.view { animation: fade .25s ease; }
+@keyframes fade { from { opacity: 0; transform: translateY(6px);} to {opacity:1;transform:none;} }
+
+/* 首页 */
+.hero { text-align: center; padding: 26px 0 18px; }
+.hero h1 { font-size: 30px; margin: 0 0 6px; color: var(--blue); }
+.hero p { color: var(--muted); margin: 0; }
+.role-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 24px; }
+.role-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 30px 22px; cursor: pointer; text-align: center; transition: .2s; box-shadow: var(--shadow);
+}
+.role-card:hover { transform: translateY(-4px); border-color: var(--blue-2); }
+.role-emoji { font-size: 44px; }
+.role-card h2 { margin: 10px 0 6px; color: var(--blue); }
+.role-card p { color: var(--muted); font-size: 14px; margin: 0 0 12px; }
+.role-go { color: var(--blue-2); font-weight: 600; font-size: 14px; }
+
+/* 卡片 */
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 24px; box-shadow: var(--shadow); max-width: 460px; margin: 30px auto;
+}
+.card h2 { margin-top: 0; color: var(--blue); }
+.card label { display: block; margin: 14px 0; font-weight: 600; font-size: 14px; }
+.card input, .dash-tools input, .dash-tools select {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 9px;
+  font-size: 15px; margin-top: 6px; background: #fff; color: var(--text);
+}
+.center-card { text-align: center; }
+.qr-wrap { margin: 10px auto 18px; display: inline-block; }
+#teaQr { width: 200px; height: 200px; background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 8px; }
+.qr-cap { font-size: 13px; margin: 8px 0 0; }
+.qr-lan { font-size: 12px; margin: 4px 0 0; word-break: break-all; }
+
+/* 按钮 */
+.btn-primary {
+  background: var(--blue); color: #fff; border: none; padding: 11px 20px;
+  border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: .15s;
+}
+.btn-primary:hover { background: var(--blue-2); }
+.btn-primary:disabled { background: #b9c4d6; cursor: not-allowed; }
+.btn-ghost {
+  background: transparent; color: var(--blue); border: 1px solid var(--blue);
+  padding: 10px 18px; border-radius: 10px; font-size: 14px; cursor: pointer;
+}
+.btn-ghost:hover { background: var(--blue-light); }
+
+/* 学生端答题 */
+.quiz-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 18px; margin-bottom: 16px; position: sticky; top: 0; z-index: 5; box-shadow: var(--shadow);
+}
+.stu-info { font-weight: 600; }
+.progress { display: flex; align-items: center; gap: 10px; min-width: 200px; }
+.progress-bar { flex: 1; height: 8px; background: var(--border); border-radius: 6px; overflow: hidden; }
+.progress-fill { height: 100%; width: 0; background: linear-gradient(90deg, var(--blue), var(--blue-2)); transition: .25s; }
+.prog-text { font-size: 13px; color: var(--muted); white-space: nowrap; }
+
+.part-title {
+  margin: 22px 0 10px; padding-left: 12px; border-left: 4px solid var(--blue);
+  font-size: 18px; font-weight: 700; color: var(--blue);
+}
+.sec-title { margin: 16px 0 8px; font-size: 15px; font-weight: 700; color: var(--text); }
+.q {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px 18px; margin-bottom: 14px; box-shadow: var(--shadow);
+}
+.q-stem { font-weight: 600; margin-bottom: 12px; }
+.q-tag {
+  display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 20px;
+  margin-right: 8px; vertical-align: middle;
+}
+.tag-single { background: #e8f0ff; color: var(--blue); }
+.tag-multiple { background: #fff3e0; color: #c77700; }
+.tag-judge { background: #e9f7ee; color: var(--green); }
+.opt {
+  display: flex; align-items: flex-start; gap: 10px; padding: 9px 12px; border: 1px solid var(--border);
+  border-radius: 9px; margin-bottom: 8px; cursor: pointer; transition: .12s;
+}
+.opt:hover { border-color: var(--blue-2); background: var(--blue-light); }
+.opt.selected { border-color: var(--blue); background: var(--blue-light); }
+.opt input { margin-top: 5px; }
+.opt-text { flex: 1; }
+
+.quiz-foot { display: flex; align-items: center; gap: 14px; margin-top: 20px; }
+.hint { color: var(--muted); font-size: 14px; }
+
+/* 结果 */
+.result-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 30px; text-align: center; box-shadow: var(--shadow);
+}
+.score-ring {
+  width: 130px; height: 130px; border-radius: 50%; margin: 0 auto 14px;
+  background: conic-gradient(var(--blue) var(--deg, 0deg), var(--border) 0deg);
+  display: grid; place-items: center; position: relative;
+}
+.score-ring::before {
+  content: ""; position: absolute; inset: 12px; background: #fff; border-radius: 50%;
+}
+.score-num { position: relative; font-size: 38px; font-weight: 800; color: var(--blue); }
+.score-den { position: relative; font-size: 14px; color: var(--muted); margin-top: -6px; }
+.result-percent { font-size: 16px; color: var(--muted); }
+.part-break { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 18px 0; }
+.pb {
+  background: var(--blue-light); border-radius: 10px; padding: 8px 14px; font-size: 13px; min-width: 130px;
+}
+.pb b { color: var(--blue); }
+.result-actions { display: flex; gap: 12px; justify-content: center; margin-top: 10px; }
+
+/* 解析 */
+.review-wrap { margin-top: 22px; }
+.rv { border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; background: #fff; }
+.rv.ok { border-left: 4px solid var(--green); }
+.rv.no { border-left: 4px solid var(--red); }
+.rv-head { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.rv-badge { font-size: 12px; padding: 1px 8px; border-radius: 20px; color: #fff; }
+.badge-ok { background: var(--green); }
+.badge-no { background: var(--red); }
+.rv-line { font-size: 14px; margin: 6px 0; }
+.rv-exp { font-size: 13px; color: var(--muted); background: var(--blue-light); padding: 8px 10px; border-radius: 8px; }
+
+/* 教师端 */
+.dash-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.dash-head h2 { color: var(--blue); margin: 0; }
+.dash-tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.dash-tools input { width: auto; min-width: 150px; margin: 0; }
+.dash-tools select { width: auto; margin: 0; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 14px; text-align: center; box-shadow: var(--shadow); }
+.stat .v { font-size: 26px; font-weight: 800; color: var(--blue); }
+.stat .k { font-size: 13px; color: var(--muted); }
+
+.table-wrap { background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: auto; box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { padding: 9px 10px; border-bottom: 1px solid var(--border); text-align: center; white-space: nowrap; }
+thead th { background: var(--blue); color: #fff; position: sticky; top: 0; cursor: default; }
+tbody tr:hover { background: var(--blue-light); }
+.cell-name { font-weight: 600; }
+.pass { color: var(--green); font-weight: 600; }
+.fail { color: var(--red); font-weight: 600; }
+
+/* toast */
+.toast {
+  position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%);
+  background: #1f2733; color: #fff; padding: 10px 18px; border-radius: 10px; font-size: 14px; z-index: 99;
+  box-shadow: 0 6px 20px rgba(0,0,0,.2);
+}
+
+/* 练习列表 */
+.pl-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.pl-tip { margin: 0 0 16px; }
+.pl-part { margin-bottom: 22px; }
+.pl-part-title { margin: 0 0 10px; padding-left: 12px; border-left: 4px solid var(--blue); font-size: 17px; font-weight: 700; color: var(--blue); }
+.pl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.pl-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; }
+.pl-card-title { font-weight: 700; font-size: 15px; }
+.pl-card-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.pl-card-meta { font-size: 12px; color: var(--muted); margin: 6px 0; }
+.pl-card-best { font-size: 13px; color: var(--blue-2); font-weight: 600; margin-bottom: 12px; }
+.pl-start { margin-top: auto; }
+.pl-head-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.export-group { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+
+.quiz-sec { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.btn-sm { padding: 6px 12px; font-size: 13px; }
+.result-sec { font-size: 14px; color: var(--blue-2); margin: -4px 0 4px; font-weight: 600; }
+
+/* 教师端：各小节概览 */
+.sec-overview { margin-bottom: 16px; }
+.so-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+.so-cards { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; }
+.so-card { min-width: 132px; background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--border); border-radius: 10px; padding: 10px 12px; box-shadow: var(--shadow); }
+.so-card.lv-good { border-left-color: var(--green); }
+.so-card.lv-mid { border-left-color: #e0a800; }
+.so-card.lv-bad { border-left-color: var(--red); }
+.so-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.so-v { font-size: 20px; font-weight: 800; color: var(--blue); margin: 2px 0; }
+.so-meta { font-size: 12px; color: var(--muted); }
+
+@media (max-width: 720px) {
+  .role-cards { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .quiz-head { flex-direction: column; align-items: stretch; }
+}
+</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">AI</span>
+      <div>
+        <div class="brand-title">模块一 从初识到大模型工具应用</div>
+        <div class="brand-sub">课堂练习平台 · 学生端 / 教师端</div>
+      </div>
+    </div>
+    <button id="backHome" class="btn-ghost hidden">← 返回首页</button>
+  </header>
+
+  <main id="app">
+    <!-- 首页：角色选择 -->
+    <section id="home" class="view">
+      <div class="hero">
+        <h1>课堂练习平台</h1>
+        <p>基于《人工智能通识》模块一目录，按部分拆分练习 · 共 <span id="secCount">—</span> 套练习 / <span id="qCount">—</span> 题</p>
+      </div>
+      <div class="role-cards">
+        <button class="role-card" data-role="student">
+          <div class="role-emoji">🎓</div>
+          <h2>学生端</h2>
+          <p>选择练习 · 即时判分 · 查看解析</p>
+          <span class="role-go">开始练习 →</span>
+        </button>
+        <button class="role-card" data-role="teacher">
+          <div class="role-emoji">📊</div>
+          <h2>教师端</h2>
+          <p>查看成绩 · 练习分析 · 导出结果</p>
+          <span class="role-go">进入管理 →</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- 学生端 -->
+    <section id="student" class="view hidden">
+      <!-- 步骤1：填写信息 -->
+      <div id="studentForm" class="card">
+        <h2>填写信息</h2>
+        <label>姓名 <input id="stuName" type="text" placeholder="请输入姓名" maxlength="20" /></label>
+        <label>班级 <input id="stuClass" type="text" placeholder="如：24电商1班" maxlength="20" /></label>
+        <button id="enterPractice" class="btn-primary">进入练习</button>
+      </div>
+
+      <!-- 步骤2：练习列表 -->
+      <div id="practiceList" class="hidden">
+        <div class="pl-head">
+          <div class="stu-info" id="plStuInfo"></div>
+          <div class="pl-head-actions">
+            <button id="plBackHome" class="btn-ghost">返回首页</button>
+            <span class="export-group">
+              <button id="stuExportCsv" class="btn-ghost btn-sm">导出本机成绩(CSV)</button>
+              <button id="stuExportJson" class="btn-ghost btn-sm">导出JSON(可合并)</button>
+            </span>
+          </div>
+        </div>
+        <p class="muted pl-tip">选择一套练习开始作答，可针对薄弱部分反复练习。已完成练习会显示你的最佳成绩。</p>
+        <div id="plBody"></div>
+      </div>
+
+      <!-- 步骤3：答题 -->
+      <div id="quizWrap" class="hidden">
+        <div class="quiz-head">
+          <div>
+            <span id="stuInfo" class="stu-info"></span>
+            <div id="quizSecName" class="quiz-sec"></div>
+          </div>
+          <div class="progress">
+            <div class="progress-bar"><div id="progFill" class="progress-fill"></div></div>
+            <span id="progText" class="prog-text">0 / 0</span>
+            <button id="quizBack" class="btn-ghost btn-sm">练习列表</button>
+          </div>
+        </div>
+        <div id="quizBody"></div>
+        <div class="quiz-foot">
+          <button id="submitQuiz" class="btn-primary" disabled>提交答卷</button>
+          <span id="submitHint" class="hint"></span>
+        </div>
+      </div>
+
+      <!-- 步骤4：结果 -->
+      <div id="resultWrap" class="hidden">
+        <div class="result-card">
+          <div class="score-ring">
+            <div class="score-num" id="scoreNum">0</div>
+            <div class="score-den" id="scoreDen">/ 0</div>
+          </div>
+          <h2 id="resultTitle">练习完成！</h2>
+          <p id="resultSec" class="result-sec"></p>
+          <p id="resultPercent" class="result-percent"></p>
+          <div id="partBreak" class="part-break"></div>
+          <div class="result-actions">
+            <button id="reviewWrong" class="btn-primary">查看解析 / 错题</button>
+            <button id="exportThis" class="btn-ghost">导出本次成绩</button>
+            <button id="backToPractice" class="btn-ghost">返回练习列表</button>
+            <button id="stuHome" class="btn-ghost">返回首页</button>
+          </div>
+        </div>
+        <div id="reviewWrap" class="review-wrap"></div>
+      </div>
+    </section>
+
+    <!-- 教师端 -->
+    <section id="teacher" class="view hidden">
+      <div id="teacherLogin" class="card center-card">
+        <h2>教师登录</h2>
+        <p class="muted">输入访问码，或用手机扫码进入</p>
+        <div id="teaQrWrap" class="qr-wrap">
+          <img id="teaQr" alt="教师端访问码二维码" />
+          <p class="qr-cap">手机扫码进入教师端<br><span class="muted">（与本机同一局域网）</span></p>
+          <p id="teaLanTip" class="muted qr-lan"></p>
+        </div>
+        <label>访问码 <input id="teaToken" type="password" placeholder="访问码" /></label>
+        <button id="teaLogin" class="btn-primary">进入</button>
+        <p id="teaErr" class="err"></p>
+      </div>
+
+      <div id="teacherDash" class="hidden">
+        <div class="dash-head">
+          <h2>成绩管理</h2>
+          <div class="dash-tools">
+            <input id="searchName" type="text" placeholder="搜索姓名/班级" />
+            <select id="filterClass"><option value="">全部班级</option></select>
+            <select id="filterSection"><option value="">全部练习</option></select>
+            <select id="sortBy">
+              <option value="time">按提交时间</option>
+              <option value="scoreDesc">按正确率高→低</option>
+              <option value="scoreAsc">按正确率低→高</option>
+              <option value="name">按姓名</option>
+            </select>
+            <button id="refreshBtn" class="btn-ghost">刷新</button>
+            <button id="exportCsv" class="btn-primary">导出 CSV</button>
+            <button id="exportXls" class="btn-primary">导出 Excel</button>
+          </div>
+        </div>
+        <div id="stats" class="stats"></div>
+        <div id="sectionOverview" class="sec-overview"></div>
+        <div class="table-wrap">
+          <table id="resultTable">
+            <thead></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p id="emptyTip" class="muted hidden">暂无学生提交记录。</p>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+  
+
+  <script>
+const QUIZ = {"meta": {"title": "《人工智能通识》模块一 · 课堂练习", "module": "模块一 从初识到大模型工具应用", "version": "4.0", "mode": "per-part"}, "parts": [{"id": "p1", "name": "第一部分 初识人工智能", "sections": [{"id": "s1", "title": "概念·分类·历程", "questions": [{"type": "single", "stem": "人工智能是指利用计算机程序与算法，模拟、延伸甚至扩展什么的技术？", "options": ["人类智能", "动物本能", "机器自身的硬件", "自然天气规律"], "answer": 0, "explain": "人工智能的核心目标是模拟、延伸和扩展人类智能。", "id": "s1-q1"}, {"type": "judge", "stem": "人工智能就是让机器像人一样思考、学习和解决问题。", "options": ["正确", "错误"], "answer": 0, "explain": "这正是人工智能的基本含义。", "id": "s1-q2"}, {"type": "single", "stem": "我们日常使用的刷脸支付、智能音箱，大多属于下列哪一类人工智能？", "options": ["弱人工智能（专用型）", "强人工智能", "具有自我意识的超级智能", "通用人工智能"], "answer": 0, "explain": "这些系统只擅长特定任务，属于弱人工智能。", "id": "s1-q3"}, {"type": "single", "stem": "下列关于“强人工智能”的说法，正确的是？", "options": ["能像人一样理解和学习各类智能任务", "只能下围棋", "只能识别语音", "只能做图片分类"], "answer": 0, "explain": "强人工智能指具备通用智能、可胜任人类各种智力活动的机器。", "id": "s1-q4"}, {"type": "judge", "stem": "目前广泛应用的人工智能（如推荐系统、语音助手）都属于弱人工智能。", "options": ["正确", "错误"], "answer": 0, "explain": "当前落地应用基本都是弱人工智能。", "id": "s1-q5"}, {"type": "single", "stem": "人工智能发展的第一次浪潮主要基于哪种方法？", "options": ["符号主义与专家系统", "深度学习", "大语言模型", "量子计算"], "answer": 0, "explain": "第一次浪潮以符号主义和专家系统为代表。", "id": "s1-q6"}, {"type": "single", "stem": "以深度学习和大数据为标志的是第几次人工智能浪潮？", "options": ["第一次", "第二次", "第三次", "尚未发生"], "answer": 2, "explain": "第三次浪潮由深度学习与海量数据驱动。", "id": "s1-q7"}, {"type": "single", "stem": "AlphaGo 战胜围棋世界冠军，主要得益于哪项技术？", "options": ["深度学习", "纯规则引擎", "机械计算", "随机搜索"], "answer": 0, "explain": "AlphaGo 依靠深度神经网络与强化学习取胜。", "id": "s1-q8"}, {"type": "judge", "stem": "图灵测试用于判断机器是否能表现出与人类难以区分的智能行为。", "options": ["正确", "错误"], "answer": 0, "explain": "图灵测试正是检验机器智能表现的方法。", "id": "s1-q9"}, {"type": "single", "stem": "提出“图灵测试”的人工智能奠基人是谁？", "options": ["艾伦·图灵", "爱因斯坦", "牛顿", "爱迪生"], "answer": 0, "explain": "艾伦·图灵提出了著名的图灵测试。", "id": "s1-q10"}]}]}, {"id": "p2", "name": "第二部分 大模型工具", "sections": [{"id": "s2", "title": "原理·分类·工具", "questions": [{"type": "single", "stem": "“大模型”通常是指什么？", "options": ["参数规模巨大、经海量数据预训练的人工智能模型", "一个小型规则程序", "普通搜索引擎", "一张电子表格"], "answer": 0, "explain": "大模型指参数量大、经大规模数据预训练的模型。", "id": "s2-q1"}, {"type": "judge", "stem": "大模型本质上就是一个传统的搜索引擎。", "options": ["正确", "错误"], "answer": 1, "explain": "大模型能生成内容，与传统搜索有本质区别。", "id": "s2-q2"}, {"type": "single", "stem": "以下属于“语言大模型”的是？", "options": ["能理解和生成文本的模型", "只处理图片的模型", "只做语音识别的模型", "只做视频剪辑的模型"], "answer": 0, "explain": "语言大模型以处理文本为主。", "id": "s2-q3"}, {"type": "single", "stem": "下列对大模型“工作过程四步”的描述，不包含哪一步？", "options": ["预训练", "微调/对齐", "人工反馈强化学习(RLHF)", "手动逐条编写每条答案"], "answer": 3, "explain": "大模型通过预训练、对齐与RLHF学习，而非人工逐条写答案。", "id": "s2-q4"}, {"type": "single", "stem": "大模型工作过程的第一步通常是？", "options": ["预训练", "部署上线", "用户提问", "导出Excel"], "answer": 0, "explain": "先在海量数据上预训练，再微调与对齐。", "id": "s2-q5"}, {"type": "judge", "stem": "RLHF 指“基于人类反馈的强化学习”，可让模型回答更符合人类偏好。", "options": ["正确", "错误"], "answer": 0, "explain": "RLHF 正是用人类反馈来对齐模型行为。", "id": "s2-q6"}, {"type": "single", "stem": "DeepSeek 是由哪里的团队开发的大模型？", "options": ["中国", "仅美国", "仅日本", "仅德国"], "answer": 0, "explain": "DeepSeek 是中国团队开发的开源大模型。", "id": "s2-q7"}, {"type": "single", "stem": "以下哪一款是字节跳动推出的大模型应用？", "options": ["豆包", "DeepSeek", "ChatGPT", "Kimi"], "answer": 0, "explain": "豆包由字节跳动推出。", "id": "s2-q8"}, {"type": "single", "stem": "Kimi 智能助手以下列哪项能力著称？", "options": ["长文本处理", "只做图片生成", "只做视频剪辑", "只做音乐创作"], "answer": 0, "explain": "Kimi 以处理超长文本见长。", "id": "s2-q9"}, {"type": "judge", "stem": "豆包、Kimi、DeepSeek 都属于常见的大模型工具。", "options": ["正确", "错误"], "answer": 0, "explain": "它们都是当前常见的大模型应用。", "id": "s2-q10"}]}]}, {"id": "p3", "name": "第三部分 大模型工具的典型应用", "sections": [{"id": "s3", "title": "文案·演示·智能体", "questions": [{"type": "single", "stem": "想快速生成一篇产品推广文案，较适合使用哪款工具？", "options": ["豆包", "Excel", "画图", "计算器"], "answer": 0, "explain": "豆包等工具擅长文案生成。", "id": "s3-q1"}, {"type": "judge", "stem": "用豆包这类工具可以辅助生成营销文案、标题等内容。", "options": ["正确", "错误"], "answer": 0, "explain": "文案生成是大模型典型应用之一。", "id": "s3-q2"}, {"type": "single", "stem": "希望根据主题自动生成演示文稿(PPT)，较适合使用？", "options": ["Kimi", "记事本", "画图", "压缩软件"], "answer": 0, "explain": "Kimi 可辅助生成演示文稿。", "id": "s3-q3"}, {"type": "single", "stem": "用 Kimi 生成 PPT 的一般流程是？", "options": ["提供主题/大纲→生成大纲→扩写内容→排版输出", "直接出成品无需输入", "只能生成图片", "只能聊天"], "answer": 0, "explain": "先给主题或大纲，再逐步生成与排版。", "id": "s3-q4"}, {"type": "judge", "stem": "智能体(Agent)能够自主规划并调用工具来完成任务。", "options": ["正确", "错误"], "answer": 0, "explain": "智能体具备自主规划与工具调用能力。", "id": "s3-q5"}, {"type": "single", "stem": "想零代码搭建一个能自动回复的客服智能体，可使用？", "options": ["扣子(Coze)", "记事本", "计算器", "画图"], "answer": 0, "explain": "扣子(Coze)支持低代码/零代码搭建智能体。", "id": "s3-q6"}, {"type": "single", "stem": "关于“智能体”，下列说法正确的是？", "options": ["能感知目标、自主决策并执行任务", "只是静态网页", "只能播放音乐", "不能调用任何工具"], "answer": 0, "explain": "智能体可感知环境、决策并执行。", "id": "s3-q7"}, {"type": "judge", "stem": "在扣子(Coze)平台上，可以通过拖拽等方式搭建智能体，无需写代码。", "options": ["正确", "错误"], "answer": 0, "explain": "扣子支持可视化、零代码搭建。", "id": "s3-q8"}, {"type": "single", "stem": "以下哪一项不属于大模型“典型应用”的例子？", "options": ["手动拧螺丝", "文案生成", "演示文稿生成", "智能体搭建"], "answer": 0, "explain": "手动拧螺丝是体力操作，不属于大模型应用。", "id": "s3-q9"}, {"type": "judge", "stem": "大模型工具的典型应用包括文案生成、演示文稿生成和智能体创建。", "options": ["正确", "错误"], "answer": 0, "explain": "这三类都是教材中的典型应用。", "id": "s3-q10"}]}]}]};
+const TEACHER_TOKEN = 'teacher7400';
+const RESULTS_KEY = 'ai_quiz_results_v1';
+const BEST_KEY = 'ai_quiz_best_v1';
+
+const state = {
+  quiz: QUIZ, answers: {}, student: null, currentSection: null,
+  teacherToken: sessionStorage.getItem('teaToken') || '',
+  results: [], filter: { search: '', cls: '', section: '', sort: 'time' }, lastDetails: null,
+};
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+
+function loadBest() { try { return JSON.parse(localStorage.getItem(BEST_KEY)) || {}; } catch (e) { return {}; } }
+function saveBest(secId, percent) { const m = loadBest(); if (!(secId in m) || percent > m[secId]) { m[secId] = percent; localStorage.setItem(BEST_KEY, JSON.stringify(m)); } }
+
+function countSections(q) { let n = 0; q.parts.forEach(p => n += p.sections.length); return n; }
+function countQuestions(q) { let n = 0; q.parts.forEach(p => p.sections.forEach(s => n += s.questions.length)); return n; }
+function findSection(secId) { let f = null; state.quiz.parts.forEach(p => p.sections.forEach(s => { if (s.id === secId) f = s; })); return f; }
+function findPartOf(secId) { return state.quiz.parts.find(p => p.sections.some(s => s.id === secId)) || null; }
+function allSections() { const l = []; state.quiz.parts.forEach(p => p.sections.forEach(s => l.push({ id: s.id, title: s.title }))); return l; }
+
+function isCorrect(q, sel) {
+  if (sel === undefined || sel === null) return false;
+  if (q.type === 'multiple') {
+    const a = Array.isArray(q.answer) ? q.answer.slice().sort() : [];
+    const s = Array.isArray(sel) ? sel.slice().sort() : [];
+    if (a.length !== s.length) return false;
+    return a.every((v, i) => v === s[i]);
+  }
+  return sel === q.answer;
+}
+function gradeSection(sectionId, answers) {
+  let target = null, part = null;
+  state.quiz.parts.forEach(p => p.sections.forEach(s => { if (s.id === sectionId) { target = s; part = p; } }));
+  if (!target) return null;
+  let score = 0, total = 0; const details = [];
+  target.questions.forEach(q => {
+    total++;
+    const correct = isCorrect(q, answers && answers[q.id]);
+    if (correct) score++;
+    details.push({ qid: q.id, section: target.id, stem: q.stem, type: q.type, selected: answers ? answers[q.id] : undefined, answer: q.answer, correct, explain: q.explain });
+  });
+  const percent = total ? Math.round((score / total) * 1000) / 10 : 0;
+  return { score, total, percent, sectionId: target.id, sectionTitle: target.title, partId: part.id, partName: part.name, details };
+}
+
+function init() {
+  $('#secCount').textContent = countSections(state.quiz);
+  $('#qCount').textContent = countQuestions(state.quiz);
+  bindGlobal();
+  checkAutoLogin();
+  const qrw = $('#teaQrWrap'); if (qrw) qrw.classList.add('hidden');
+}
+
+function bindGlobal() {
+  $$('.role-card').forEach(c => c.addEventListener('click', () => { if (c.dataset.role === 'student') showStudent(); else showTeacher(); }));
+  $('#backHome').addEventListener('click', showHome);
+}
+function showView(id) { $$('.view').forEach(v => v.classList.add('hidden')); $('#' + id).classList.remove('hidden'); $('#backHome').classList.toggle('hidden', id === 'home'); }
+function showHome() { showView('home'); }
+
+function showStudent() {
+  showView('student');
+  $('#studentForm').classList.remove('hidden');
+  $('#practiceList').classList.add('hidden');
+  $('#quizWrap').classList.add('hidden');
+  $('#resultWrap').classList.add('hidden');
+  $('#stuName').value = ''; $('#stuClass').value = '';
+}
+$('#enterPractice') && $('#enterPractice').addEventListener('click', () => {
+  const name = $('#stuName').value.trim();
+  const cls = $('#stuClass').value.trim();
+  if (!name) { toast('请填写姓名'); return; }
+  if (!state.quiz) { toast('题库尚未加载'); return; }
+  state.student = { name, className: cls || '未填写' };
+  renderPracticeList();
+  $('#studentForm').classList.add('hidden');
+  $('#practiceList').classList.remove('hidden');
+  window.scrollTo(0, 0);
+});
+
+function renderPracticeList() {
+  $('#plStuInfo').textContent = `${state.student.name}（${state.student.className}）`;
+  const best = loadBest();
+  const body = $('#plBody'); body.innerHTML = '';
+  state.quiz.parts.forEach(part => {
+    const pg = document.createElement('div'); pg.className = 'pl-part';
+    const grid = document.createElement('div'); grid.className = 'pl-grid';
+    part.sections.forEach(sec => {
+      const bestPct = best[sec.id];
+      const card = document.createElement('div'); card.className = 'pl-card';
+      card.innerHTML = `<div class="pl-card-title">${escapeHtml(part.name)}</div><div class="pl-card-sub">${escapeHtml(sec.title)}</div><div class="pl-card-meta">${sec.questions.length} 题 · 单选+判断</div><div class="pl-card-best">${bestPct !== undefined ? '最佳：' + bestPct + '%' : '未练习'}</div><button class="btn-primary pl-start" data-sec="${sec.id}">开始练习</button>`;
+      card.querySelector('.pl-start').addEventListener('click', () => startSection(sec.id));
+      grid.appendChild(card);
+    });
+    pg.appendChild(grid); body.appendChild(pg);
+  });
+}
+function startSection(secId) {
+  const sec = findSection(secId); if (!sec) return;
+  const part = findPartOf(secId);
+  state.currentSection = sec; state.answers = {};
+  renderQuizSection(sec);
+  $('#practiceList').classList.add('hidden');
+  $('#resultWrap').classList.add('hidden');
+  $('#quizWrap').classList.remove('hidden');
+  $('#stuInfo').textContent = `${state.student.name}（${state.student.className}）`;
+  $('#quizSecName').textContent = part ? part.name : sec.title;
+  window.scrollTo(0, 0);
+}
+function renderQuizSection(sec) {
+  const body = $('#quizBody'); body.innerHTML = '';
+  sec.questions.forEach(q => body.appendChild(renderQuestion(q)));
+  updateProgress();
+}
+function renderQuestion(q) {
+  const el = document.createElement('div'); el.className = 'q';
+  const tagClass = q.type === 'single' ? 'tag-single' : 'tag-judge';
+  const tagText = q.type === 'single' ? '单选' : '判断';
+  el.innerHTML = `<div class="q-stem"><span class="q-tag ${tagClass}">${tagText}</span>${escapeHtml(q.stem)}</div>`;
+  const opts = document.createElement('div');
+  q.options.forEach((opt, i) => {
+    const o = document.createElement('label'); o.className = 'opt';
+    o.innerHTML = `<input type="radio" name="${q.id}" value="${i}" /><span class="opt-text">${String.fromCharCode(65 + i)}. ${escapeHtml(opt)}</span>`;
+    o.addEventListener('click', (e) => {
+      e.preventDefault();
+      state.answers[q.id] = i;
+      $$('.opt', el).forEach((op, oi) => op.classList.toggle('selected', oi === i));
+      updateProgress();
+    });
+    opts.appendChild(o);
+  });
+  el.appendChild(opts);
+  return el;
+}
+function updateProgress() {
+  const sec = state.currentSection; if (!sec) return;
+  const total = sec.questions.length;
+  let answered = 0;
+  sec.questions.forEach(q => { const a = state.answers[q.id]; if (a !== undefined && a !== null) answered++; });
+  const pct = total ? Math.round(answered / total * 100) : 0;
+  $('#progFill').style.width = pct + '%';
+  $('#progText').textContent = `${answered} / ${total}`;
+  const complete = answered === total;
+  $('#submitQuiz').disabled = !complete;
+  $('#submitHint').textContent = complete ? '' : '请答完所有题目再提交';
+}
+$('#quizBack') && $('#quizBack').addEventListener('click', backToPractice);
+$('#backToPractice') && $('#backToPractice').addEventListener('click', backToPractice);
+function backToPractice() {
+  $('#quizWrap').classList.add('hidden');
+  $('#resultWrap').classList.add('hidden');
+  renderPracticeList();
+  $('#practiceList').classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+$('#plBackHome') && $('#plBackHome').addEventListener('click', showHome);
+
+$('#submitQuiz') && $('#submitQuiz').addEventListener('click', submitQuiz);
+function submitQuiz() {
+  $('#submitQuiz').disabled = true;
+  const result = gradeSection(state.currentSection.id, state.answers);
+  if (!result) { toast('练习不存在'); $('#submitQuiz').disabled = false; return; }
+  const record = {
+    id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    name: state.student.name, className: state.student.className,
+    sectionId: result.sectionId, sectionTitle: result.sectionTitle,
+    partId: result.partId, partName: result.partName,
+    score: result.score, total: result.total, percent: result.percent,
+    details: result.details, submittedAt: new Date().toISOString()
+  };
+  const all = loadResultsLocal(); all.push(record); saveResultsLocal(all);
+  saveBest(result.sectionId, result.percent);
+  renderResult(result);
+}
+function renderResult(data) {
+  state.lastDetails = data.details;
+  $('#quizWrap').classList.add('hidden');
+  $('#resultWrap').classList.remove('hidden');
+  const deg = data.percent * 3.6;
+  $('.score-ring').style.setProperty('--deg', deg + 'deg');
+  $('#scoreNum').textContent = data.score;
+  $('#scoreDen').textContent = '/ ' + data.total;
+  $('#resultSec').textContent = data.partName || data.sectionTitle;
+  $('#resultPercent').textContent = `正确率 ${data.percent}%`;
+  const pb = $('#partBreak'); pb.innerHTML = '';
+  const d = document.createElement('div'); d.className = 'pb';
+  d.innerHTML = `本次练习<br><b>${data.score}/${data.total}</b> · ${data.percent}%`;
+  pb.appendChild(d);
+  renderReview(data.details, false);
+  window.scrollTo(0, 0);
+}
+function renderReview(details, onlyWrong) {
+  const wrap = $('#reviewWrap');
+  wrap.innerHTML = '<h3 style="color:var(--blue)">题目解析</h3>';
+  details.forEach((d, i) => {
+    if (onlyWrong && d.correct) return;
+    const q = findQuestion(d.qid);
+    const rv = document.createElement('div');
+    rv.className = 'rv ' + (d.correct ? 'ok' : 'no');
+    const selText = formatAnswer(q, d.selected);
+    const ansText = formatAnswer(q, d.answer);
+    rv.innerHTML = `<div class="rv-head"><span class="rv-badge ${d.correct ? 'badge-ok' : 'badge-no'}">${d.correct ? '正确' : '错误'}</span> ${i + 1}. ${escapeHtml(d.stem)}</div><div class="rv-line">你的答案：${selText}</div><div class="rv-line">正确答案：${ansText}</div><div class="rv-exp">解析：${escapeHtml(d.explain || '')}</div>`;
+    wrap.appendChild(rv);
+  });
+}
+let reviewOnlyWrong = false;
+$('#reviewWrong') && $('#reviewWrong').addEventListener('click', () => {
+  reviewOnlyWrong = !reviewOnlyWrong;
+  renderReview(state.lastDetails || [], reviewOnlyWrong);
+  $('#reviewWrong').textContent = reviewOnlyWrong ? '查看全部解析' : '只看错题';
+});
+$('#stuHome') && $('#stuHome').addEventListener('click', showHome);
+
+// ---- 学生导出本机成绩（数据在浏览器 localStorage，需学生自行导出后发给老师）----
+function stamp() { return new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-'); }
+function exportLocalData(fmt) {
+  const all = loadResultsLocal();
+  if (!all.length) { toast('本机暂无成绩可导出'); return; }
+  const ts = stamp();
+  if (fmt === 'json') {
+    const payload = { exportedAt: new Date().toISOString(), source: location.href, count: all.length, records: all };
+    downloadFile('quiz_本机成绩_' + ts + '.json', JSON.stringify(payload, null, 2), 'application/json');
+    toast('已导出 JSON（共 ' + all.length + ' 条）');
+  } else {
+    const csv = buildCsv(all);
+    downloadFile('quiz_本机成绩_' + ts + '.csv', '﻿' + csv, 'text/csv');
+    toast('已导出 CSV（共 ' + all.length + ' 条）');
+  }
+}
+function exportThisResult() {
+  const all = loadResultsLocal();
+  const rec = all[all.length - 1];
+  if (!rec) { toast('暂无可导出的本次成绩'); return; }
+  const ts = stamp();
+  const csv = buildCsv([rec]);
+  downloadFile('quiz_本次成绩_' + ts + '.csv', '﻿' + csv, 'text/csv');
+  toast('已导出本次成绩');
+}
+$('#stuExportCsv') && $('#stuExportCsv').addEventListener('click', () => exportLocalData('csv'));
+$('#stuExportJson') && $('#stuExportJson').addEventListener('click', () => exportLocalData('json'));
+$('#exportThis') && $('#exportThis').addEventListener('click', exportThisResult);
+
+function showTeacher() {
+  showView('teacher');
+  if (state.teacherToken) { enterTeacher(state.teacherToken); }
+  else { $('#teacherLogin').classList.remove('hidden'); $('#teacherDash').classList.add('hidden'); $('#teaErr').textContent = ''; }
+}
+function enterTeacher(token) {
+  token = (token || '').trim();
+  if (!token) { $('#teaErr').textContent = '请输入访问码'; return; }
+  if (token !== TEACHER_TOKEN) { $('#teaErr').textContent = '访问码错误'; return; }
+  state.teacherToken = token;
+  sessionStorage.setItem('teaToken', token);
+  showView('teacher');
+  $('#teacherLogin').classList.add('hidden');
+  $('#teacherDash').classList.remove('hidden');
+  loadResults();
+}
+$('#teaLogin') && $('#teaLogin').addEventListener('click', () => { enterTeacher($('#teaToken').value.trim()); });
+function checkAutoLogin() {
+  const params = new URLSearchParams(location.search);
+  const token = params.get('token');
+  const role = params.get('role');
+  if (role === 'teacher' && token) { history.replaceState(null, '', location.pathname); enterTeacher(token); }
+}
+
+function loadResultsLocal() { try { return JSON.parse(localStorage.getItem(RESULTS_KEY)) || []; } catch (e) { return []; } }
+function saveResultsLocal(list) { localStorage.setItem(RESULTS_KEY, JSON.stringify(list)); }
+function loadResults() { state.results = loadResultsLocal(); renderDashboard(); }
+
+function renderDashboard() {
+  const r = applyFilter(state.results);
+  const stats = $('#stats');
+  if (r.length === 0) { stats.innerHTML = ''; $('#emptyTip').classList.remove('hidden'); }
+  else {
+    $('#emptyTip').classList.add('hidden');
+    const percents = r.map(x => x.percent);
+    const avg = Math.round(percents.reduce((a, b) => a + b, 0) / percents.length * 10) / 10;
+    const max = Math.max(...percents);
+    const pass = percents.filter(p => p >= 60).length;
+    const passRate = Math.round(pass / percents.length * 1000) / 10;
+    stats.innerHTML = `<div class="stat"><div class="v">${r.length}</div><div class="k">提交人次</div></div><div class="stat"><div class="v">${avg}%</div><div class="k">平均正确率</div></div><div class="stat"><div class="v">${max}%</div><div class="k">最高正确率</div></div><div class="stat"><div class="v">${passRate}%</div><div class="k">及格率(≥60%)</div></div>`;
+  }
+  renderSectionOverview();
+  renderTable(r);
+  const classes = [...new Set(state.results.map(x => x.className))].sort();
+  const sel = $('#filterClass'); const curC = sel.value;
+  sel.innerHTML = '<option value="">全部班级</option>' + classes.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+  if (classes.includes(curC)) sel.value = curC;
+  const secList = allSections();
+  const ssel = $('#filterSection'); const curS = ssel.value;
+  ssel.innerHTML = '<option value="">全部练习</option>' + secList.map(s => { const part = findPartOf(s.id); return `<option value="${s.id}">${escapeHtml(part ? part.name : s.title)}</option>`; }).join('');
+  if (secList.some(s => s.id === curS)) ssel.value = curS;
+}
+function renderSectionOverview() {
+  const secList = allSections();
+  const map = {};
+  secList.forEach(s => { const part = findPartOf(s.id); map[s.id] = { title: part ? part.name : s.title, sum: 0, n: 0, pass: 0 }; });
+  state.results.forEach(x => { if (map[x.sectionId]) { map[x.sectionId].sum += x.percent; map[x.sectionId].n++; if (x.percent >= 60) map[x.sectionId].pass++; } });
+  const wrap = $('#sectionOverview');
+  const cards = secList.map(s => {
+    const m = map[s.id];
+    const avg = m.n ? Math.round(m.sum / m.n * 10) / 10 : null;
+    const lvl = avg === null ? 'lv-none' : avg >= 80 ? 'lv-good' : avg >= 60 ? 'lv-mid' : 'lv-bad';
+    return `<div class="so-card ${lvl}"><div class="so-name">${escapeHtml(m.title)}</div><div class="so-v">${avg === null ? '—' : avg + '%'}</div><div class="so-meta">${m.n} 人次 · 及格 ${m.pass}</div></div>`;
+  }).join('');
+  wrap.innerHTML = `<div class="so-title">各部分练习情况（平均正确率）</div><div class="so-cards">${cards}</div>`;
+}
+function applyFilter(list) {
+  let r = list.slice();
+  const { search, cls, section, sort } = state.filter;
+  if (search) { const s = search.toLowerCase(); r = r.filter(x => x.name.toLowerCase().includes(s) || x.className.toLowerCase().includes(s)); }
+  if (cls) r = r.filter(x => x.className === cls);
+  if (section) r = r.filter(x => x.sectionId === section);
+  if (sort === 'scoreDesc') r.sort((a, b) => b.percent - a.percent);
+  else if (sort === 'scoreAsc') r.sort((a, b) => a.percent - b.percent);
+  else if (sort === 'name') r.sort((a, b) => a.name.localeCompare(b.name, 'zh'));
+  else r.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+  return r;
+}
+function renderTable(r) {
+  const thead = $('#resultTable thead');
+  const tbody = $('#resultTable tbody');
+  thead.innerHTML = `<tr><th>序号</th><th>姓名</th><th>班级</th><th>练习（部分）</th><th>得分</th><th>正确率</th><th>提交时间</th></tr>`;
+  if (r.length === 0) { tbody.innerHTML = ''; return; }
+  tbody.innerHTML = r.map((x, i) => {
+    const cls = x.percent >= 60 ? 'pass' : 'fail';
+    return `<tr><td>${i + 1}</td><td class="cell-name">${escapeHtml(x.name)}</td><td>${escapeHtml(x.className)}</td><td>${escapeHtml(x.partName || x.sectionTitle || '')}</td><td>${x.score}/${x.total}</td><td class="${cls}">${x.percent}%</td><td>${new Date(x.submittedAt).toLocaleString('zh-CN')}</td></tr>`;
+  }).join('');
+}
+$('#searchName') && $('#searchName').addEventListener('input', e => { state.filter.search = e.target.value; renderDashboard(); });
+$('#filterClass') && $('#filterClass').addEventListener('change', e => { state.filter.cls = e.target.value; renderDashboard(); });
+$('#filterSection') && $('#filterSection').addEventListener('change', e => { state.filter.section = e.target.value; renderDashboard(); });
+$('#sortBy') && $('#sortBy').addEventListener('change', e => { state.filter.sort = e.target.value; renderDashboard(); });
+$('#refreshBtn') && $('#refreshBtn').addEventListener('click', loadResults);
+$('#exportCsv') && $('#exportCsv').addEventListener('click', () => exportFile('csv'));
+$('#exportXls') && $('#exportXls').addEventListener('click', () => exportFile('xls'));
+
+function exportFile(fmt) {
+  if (!state.results.length) { toast('暂无数据可导出'); return; }
+  if (fmt === 'xls') { const html = buildXls(state.results); downloadFile('quiz_results.xls', html, 'application/vnd.ms-excel'); toast('已开始导出 Excel'); }
+  else { const csv = buildCsv(state.results); downloadFile('quiz_results.csv', '﻿' + csv, 'text/csv'); toast('已开始导出 CSV'); }
+}
+function buildCsv(all) {
+  const header = ['序号', '姓名', '班级', '练习（部分）', '得分', '正确率(%)', '提交时间'];
+  const rows = [header.join(',')];
+  all.forEach((r, i) => {
+    const row = [i + 1, r.name, r.className, r.partName || r.sectionTitle || '', `${r.score}/${r.total}`, r.percent, new Date(r.submittedAt).toLocaleString('zh-CN')];
+    rows.push(row.map(csvEscape).join(','));
+  });
+  return rows.join('\r\n');
+}
+function csvEscape(v) { const s = String(v == null ? '' : v); if (/[",\r\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"'; return s; }
+function buildXls(all) {
+  let thead = '<tr><th>序号</th><th>姓名</th><th>班级</th><th>练习（部分）</th><th>得分</th><th>正确率(%)</th><th>提交时间</th></tr>';
+  let tbody = '';
+  all.forEach((r, i) => { const tr = `<tr><td>${i + 1}</td><td>${r.name}</td><td>${r.className}</td><td>${r.partName || r.sectionTitle || ''}</td><td>${r.score}/${r.total}</td><td>${r.percent}</td><td>${new Date(r.submittedAt).toLocaleString('zh-CN')}</td></tr>`; tbody += tr; });
+  return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"></head><body><table border="1">${thead}${tbody}</table></body></html>`;
+}
+function downloadFile(name, content, type) {
+  const blob = new Blob([content], { type: type + ';charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function findQuestion(qid) { let f = null; state.quiz.parts.forEach(p => p.sections.forEach(s => s.questions.forEach(q => { if (q.id === qid) f = q; }))); return f; }
+function formatAnswer(q, ans) {
+  if (ans === undefined || ans === null) return '（未作答）';
+  if (q.type === 'multiple') { const arr = Array.isArray(ans) ? ans : [ans]; return arr.map(i => String.fromCharCode(65 + i)).join('、') || '（空）'; }
+  return String.fromCharCode(65 + ans);
+}
+let toastTimer;
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.remove('hidden'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add('hidden'), 2200); }
+
+init();
+</script>
+</body>
+</html>
